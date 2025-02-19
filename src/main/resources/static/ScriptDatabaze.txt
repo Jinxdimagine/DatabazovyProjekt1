@@ -1,0 +1,46 @@
+-- Vytvoření tabulky zákazníků (Customers)
+CREATE TABLE customers (
+    customer_id INT PRIMARY KEY IDENTITY,
+    name NVARCHAR(100) NOT NULL,
+    email NVARCHAR(100) NOT NULL UNIQUE,
+    phone_number NVARCHAR(20),
+    address NVARCHAR(255)
+);
+
+-- Vytvoření tabulky produktů (Products)
+CREATE TABLE products (
+    product_id INT PRIMARY KEY IDENTITY,
+    name NVARCHAR(100) NOT NULL,
+    description NVARCHAR(255),
+    price DECIMAL(10, 2) NOT NULL,
+    stock_quantity INT NOT NULL
+);
+
+-- Vytvoření tabulky objednávek (Orders)
+CREATE TABLE orders (
+    order_id INT PRIMARY KEY IDENTITY,
+    customer_id INT,
+    order_date DATETIME NOT NULL,
+    total_amount DECIMAL(10, 2) NOT NULL,
+    FOREIGN KEY (customer_id) REFERENCES customers(customer_id)
+);
+
+-- Vytvoření tabulky plateb (Payments)
+CREATE TABLE payments (
+    payment_id INT PRIMARY KEY IDENTITY,
+    order_id INT,
+    payment_date DATETIME NOT NULL,
+    amount DECIMAL(10, 2) NOT NULL,
+    payment_method NVARCHAR(50) NOT NULL,
+    FOREIGN KEY (order_id) REFERENCES orders(order_id)
+);
+
+-- Vytvoření tabulky pro vztah mezi objednávkami a produkty (OrderProducts)
+CREATE TABLE order_products (
+    order_id INT,
+    product_id INT,
+    quantity INT NOT NULL,
+    PRIMARY KEY (order_id, product_id),
+    FOREIGN KEY (order_id) REFERENCES orders(order_id),
+    FOREIGN KEY (product_id) REFERENCES products(product_id)
+);
